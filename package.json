@@ -4,9 +4,9 @@
   "description": "A service to find news and save it to your personal account",
   "main": "app.js",
   "scripts": {
-    "lint": "npx eslint .",
+    "lint": "npx eslint . --ext .js",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "NODE_ENV=development nodemon app.js"
   },
   "keywords": [],
   "author": "Alena Batushkova",
@@ -15,6 +15,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "celebrate": "^13.0.3",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.3",

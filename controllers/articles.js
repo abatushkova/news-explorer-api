@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 const getArticles = (req, res, next) => {
-  Article.find({})
+  Article.find({ owner: req.user._id })
     .populate('owner')
     .then((articles) => res.status(200).send(articles))
     .catch(next);
@@ -52,14 +52,15 @@ const createArticle = (req, res, next) => {
 const deleteArticle = (req, res, next) => {
   const owner = req.user._id;
 
-  Article.findOneAndDelete({ _id: req.params.articleId })
+  Article.findOne({ _id: req.params.id })
     .orFail()
     .then((article) => {
       if (String(article.owner) !== owner) {
         next(new ForbiddenError('У вас нет прав на удаление статьи'));
+      } else {
+        Article.deleteOne(article)
+          .then(() => res.status(200).send(article));
       }
-
-      return res.status(200).send(article);
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
@@ -67,7 +68,7 @@ const deleteArticle = (req, res, next) => {
       }
 
       if (err.name === 'CastError') {
-        next(new BadRequestError('Запрос на удаление статьи не прошел валидацию'));
+        next(new BadRequestError('Невалидный id статьи'));
       }
 
       next(err);

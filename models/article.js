@@ -46,13 +46,13 @@ const articleSchema = new mongoose.Schema({
 });
 
 articleSchema.methods.hideOwnerSalt = function () {
-  const owner = this.toObject();
+  const article = this.toObject();
 
-  if (owner._id) {
-    delete owner._id;
+  if (article.owner) {
+    delete article.owner;
   }
 
-  return owner;
+  return article;
 };
 
 module.exports = mongoose.model('article', articleSchema);

@@ -8,10 +8,10 @@ const {
 const {
   validateArticle,
   validateObjectId,
-} = require('../middlewares/validatiors');
+} = require('../middlewares/validators');
 
 router.get('/', getArticles);
 router.post('/', validateArticle, createArticle);
-router.delete('/:articleId', validateObjectId, deleteArticle);
+router.delete('/:id', validateObjectId, deleteArticle);
 
 module.exports = router;
