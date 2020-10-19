@@ -1,13 +1,17 @@
 const Article = require('../models/article');
-
-const BadRequestError = require('../errors/BadRequestError');
-const NotFoundError = require('../errors/NotFoundError');
-const ForbiddenError = require('../errors/ForbiddenError');
+const BadRequestError = require('../utils/errors/BadRequestError');
+const NotFoundError = require('../utils/errors/NotFoundError');
+const ForbiddenError = require('../utils/errors/ForbiddenError');
+const {
+  NO_RIGHTS_ERROR,
+  ARTICLE_NOT_FOUND,
+  ARTICLE_ID_NOT_VALID,
+} = require('../utils/constants');
 
 const getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
     .populate('owner')
-    .then((articles) => res.status(200).send(articles))
+    .then((articles) => res.send(articles))
     .catch(next);
 };
 
@@ -35,7 +39,7 @@ const createArticle = (req, res, next) => {
     .then((article) => {
       const freshArticle = article.hideOwnerSalt();
 
-      return res.status(200).send(freshArticle);
+      return res.status(201).send(freshArticle);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -56,19 +60,19 @@ const deleteArticle = (req, res, next) => {
     .orFail()
     .then((article) => {
       if (String(article.owner) !== owner) {
-        next(new ForbiddenError('У вас нет прав на удаление статьи'));
+        next(new ForbiddenError(NO_RIGHTS_ERROR));
       } else {
         Article.deleteOne(article)
-          .then(() => res.status(200).send(article));
+          .then(() => res.send(article));
       }
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Нет статьи с таким id'));
+        next(new NotFoundError(ARTICLE_NOT_FOUND));
       }
 
       if (err.name === 'CastError') {
-        next(new BadRequestError('Невалидный id статьи'));
+        next(new BadRequestError(ARTICLE_ID_NOT_VALID));
       }
 
       next(err);

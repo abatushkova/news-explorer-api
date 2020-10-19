@@ -19,7 +19,7 @@ const {
 
 const app = express();
 
-mongoose.connect(NODE_ENV === 'production' ? MONGO_URI : mongoDB, {
+mongoose.connect((NODE_ENV === 'production' && MONGO_URI) ? MONGO_URI : mongoDB, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
