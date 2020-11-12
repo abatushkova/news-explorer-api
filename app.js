@@ -13,7 +13,7 @@ const errorHandler = require('./middlewares/error-handler');
 const { mongoDB } = require('./config');
 
 const {
-  PORT = 8080,
+  PORT = 3000,
   NODE_ENV,
   MONGO_URI,
 } = process.env;
