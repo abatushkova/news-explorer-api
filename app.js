@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const cors = require('cors');
 
 const limiter = require('./middlewares/limiter');
 const routes = require('./routes');
@@ -12,7 +13,7 @@ const errorHandler = require('./middlewares/error-handler');
 const { mongoDB } = require('./config');
 
 const {
-  PORT = 3000,
+  PORT = 8080,
   NODE_ENV,
   MONGO_URI,
 } = process.env;
@@ -25,6 +26,8 @@ mongoose.connect((NODE_ENV === 'production' && MONGO_URI) ? MONGO_URI : mongoDB,
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+app.use(cors({ origin: true }));
 
 app.use(helmet.contentSecurityPolicy({
   directives: {
