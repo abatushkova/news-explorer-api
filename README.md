@@ -23,10 +23,3 @@ $ npm run start
 ```
 $ npm run dev
 ```
-
-## Credits
-Alena Batushkova - junior web developer
-
-## Links
-IP 84.201.130.3  
-Domain name - api.the-news.students.nomoreparties.co
